@@ -1,14 +1,17 @@
-// Ultra-Stealth Engine v10.0: Global Apex Edition (CreepJS & FingerprintJS v4 Bypass)
+// Ultra-Stealth Engine v11.0: Quantum Apex Edition (Domain-Isolated Fingerprint & Font Shield)
 (function () {
   'use strict';
 
-  const sessionSeed = Math.floor(Math.random() * 100000) + 1;
+  // Domain-isolated session seed (Different fingerprint per domain load!)
+  const domainHash = Array.from(window.location.hostname || 'default')
+    .reduce((acc, char) => (acc * 31 + char.charCodeAt(0)) % 1000000, 7);
+  const sessionSeed = domainHash + Math.floor(Math.random() * 1000) + 1;
 
   function getRandomFloatNoise() {
-    return (Math.random() - 0.5) * 0.00001;
+    return (Math.random() - 0.5) * 0.000005;
   }
 
-  // Helper to make overridden functions appear 100% [native code]
+  // Native function masking helper
   const nativeToString = Function.prototype.toString;
   const overriddenFns = new Set();
   Function.prototype.toString = function () {
@@ -55,7 +58,7 @@
   } catch (e) {}
 
   // -------------------------------------------------------------
-  // 2. CANVAS & OFFSCREENCANVAS SUBPIXEL JITTER
+  // 2. DOMAIN-ISOLATED CANVAS & FONT ENUMERATION SHIELD
   // -------------------------------------------------------------
   try {
     const originalGetImageData = CanvasRenderingContext2D.prototype.getImageData;
@@ -88,7 +91,7 @@
       return new Proxy(metrics, {
         get(target, prop) {
           if (prop === 'width') {
-            return target.width + (sessionSeed % 2 === 0 ? 0.00003 : -0.00003);
+            return target.width + (sessionSeed % 2 === 0 ? 0.00002 : -0.00002);
           }
           return target[prop];
         }
@@ -113,7 +116,7 @@
   } catch (e) {}
 
   // -------------------------------------------------------------
-  // 3. WEBGL & WEBGL2 PARAMETER & READPIXELS SPOOFING
+  // 3. WEBGL & WEBGL2 BUFFER NOISE & PARAMETER SPOOFING
   // -------------------------------------------------------------
   try {
     const webGLVendor = 'Google Inc. (NVIDIA)';
@@ -152,7 +155,7 @@
       const originalGetChannelData = AudioBuffer.prototype.getChannelData;
       AudioBuffer.prototype.getChannelData = markNative(function () {
         const channelData = originalGetChannelData.apply(this, arguments);
-        for (let i = 0; i < channelData.length; i += 60) {
+        for (let i = 0; i < channelData.length; i += 50) {
           channelData[i] += getRandomFloatNoise();
         }
         return channelData;
@@ -165,7 +168,21 @@
   } catch (e) {}
 
   // -------------------------------------------------------------
-  // 5. PERFORMANCE TIMING JITTER (SIDE-CHANNEL ATTACK PROTECTION)
+  // 5. FONT ENUMERATION STANDARDIZATION SHIELD
+  // -------------------------------------------------------------
+  try {
+    if (document.fonts && document.fonts.check) {
+      const originalCheck = document.fonts.check;
+      document.fonts.check = markNative(function (font, text) {
+        const allowedFonts = ['Arial', 'Calibri', 'Courier New', 'Georgia', 'Helvetica', 'Impact', 'Segoe UI', 'Times New Roman', 'Verdana'];
+        const isAllowed = allowedFonts.some(f => font.includes(f));
+        return isAllowed ? originalCheck.apply(this, arguments) : false;
+      }, 'check');
+    }
+  } catch (e) {}
+
+  // -------------------------------------------------------------
+  // 6. PERFORMANCE TIMING JITTER (SIDE-CHANNEL PROTECTION)
   // -------------------------------------------------------------
   try {
     if (window.performance && window.performance.now) {
@@ -177,7 +194,7 @@
   } catch (e) {}
 
   // -------------------------------------------------------------
-  // 6. MEDIADEVICES & HARDWARE SPOOFING
+  // 7. MEDIADEVICES & HARDWARE SPOOFING
   // -------------------------------------------------------------
   try {
     if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
@@ -190,7 +207,7 @@
   } catch (e) {}
 
   // -------------------------------------------------------------
-  // 7. TIMEZONE & LOCALE SYNCHRONIZATION ENGINE (US / UTC)
+  // 8. TIMEZONE & LOCALE SYNCHRONIZATION ENGINE (US / UTC)
   // -------------------------------------------------------------
   try {
     const originalResolvedOptions = Intl.DateTimeFormat.prototype.resolvedOptions;
@@ -207,13 +224,13 @@
   } catch (e) {}
 
   // -------------------------------------------------------------
-  // 8. PRIVACY HEADERS & HARDWARE STANDARDIZATION
+  // 9. PRIVACY HEADERS & HARDWARE STANDARDIZATION
   // -------------------------------------------------------------
   try {
     const defineProp = (obj, prop, valueGetter) => {
       try {
         Object.defineProperty(obj, prop, {
-          get: valueGetter,
+          get: markNative(valueGetter, prop),
           configurable: true,
           enumerable: true
         });
@@ -228,6 +245,13 @@
     defineProp(navigator, 'languages', () => ['en-US', 'en']);
     defineProp(navigator, 'language', () => 'en-US');
     defineProp(navigator, 'maxTouchPoints', () => 0);
+
+    defineProp(screen, 'width', () => 1920);
+    defineProp(screen, 'height', () => 1080);
+    defineProp(screen, 'availWidth', () => 1920);
+    defineProp(screen, 'availHeight', () => 1040);
+    defineProp(screen, 'colorDepth', () => 24);
+    defineProp(screen, 'pixelDepth', () => 24);
 
     defineProp(navigator, 'connection', () => ({
       downlink: 10,
@@ -246,5 +270,5 @@
     }
   } catch (e) {}
 
-  console.log('🛡️ [Ultra-Stealth Engine v10.0 Global Apex] Fully Shielded & Native Disguised');
+  console.log('🌌 [Ultra-Stealth Engine v11.0 Quantum Apex] Domain-Isolated & Quantum Shielded');
 })();

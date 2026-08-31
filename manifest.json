@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Ultra-Stealth Privacy Shield",
-  "version": "10.0.0",
-  "description": "Bảo vệ ẩn danh tối cao v10.0 Global Apex: Tự động đổi IP Tor SOCKS5, chống leak IP WebRTC, và làm nhiễu Fingerprint phần cứng (Canvas, WebGL2, Audio, Performance, MediaDevices).",
+  "version": "11.0.0",
+  "description": "Bảo vệ ẩn danh vô địch v11.0 Quantum Apex: Đổi IP Tor SOCKS5, Chống rò rỉ IP WebRTC, Cách ly Fingerprint theo Domain, Chống Font Enumeration & Native Function Disguise.",
   "permissions": [
     "privacy",
     "proxy",
