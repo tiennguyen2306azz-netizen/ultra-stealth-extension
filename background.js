@@ -1,14 +1,16 @@
-// Ultra-Stealth Service Worker v12.1 - Smart Network Fallback & Tor Proxy Worker
+// Ultra-Stealth Service Worker v12.2 - Smart Zero-Downtime Proxy Worker
 
-const TOR_PROXY_CONFIG = {
-  mode: 'fixed_servers',
-  rules: {
-    singleProxy: {
-      scheme: 'socks5',
-      host: '127.0.0.1',
-      port: 9150 // Tor Browser Default SOCKS5 Port
-    },
-    bypassList: ['<local>', '127.0.0.1', 'localhost', '*.local']
+const TOR_PAC_CONFIG = {
+  mode: 'pac_script',
+  pacScript: {
+    data: `
+      function FindProxyForURL(url, host) {
+        if (isPlainHostName(host) || shExpMatch(host, '127.0.0.1') || shExpMatch(host, 'localhost') || shExpMatch(host, '*.local')) {
+          return 'DIRECT';
+        }
+        return 'SOCKS5 127.0.0.1:9150; SOCKS5 127.0.0.1:9050; DIRECT';
+      }
+    `
   }
 };
 
@@ -64,14 +66,14 @@ function applySettings(settings) {
     }
   }
 
-  // 4. Tor SOCKS5 Proxy Integration (Auto-Fallback Protected)
+  // 4. Smart Zero-Downtime Proxy (Auto-Fallback to DIRECT if Tor is offline)
   if (settings.proxyEnabled) {
-    chrome.proxy.settings.set({ value: TOR_PROXY_CONFIG, scope: 'regular' }, () => {
-      console.log('[Ultra-Stealth v12.1] Tor SOCKS5 Proxy ACTIVE on port 9150');
+    chrome.proxy.settings.set({ value: TOR_PAC_CONFIG, scope: 'regular' }, () => {
+      console.log('[Ultra-Stealth v12.2] Smart Zero-Downtime Proxy ACTIVE (SOCKS5 9150 -> 9050 -> DIRECT)');
     });
   } else {
     chrome.proxy.settings.clear({ scope: 'regular' }, () => {
-      console.log('[Ultra-Stealth v12.1] Direct Connection Active (Gigabit Mode)');
+      console.log('[Ultra-Stealth v12.2] Direct Connection Active');
     });
   }
 
