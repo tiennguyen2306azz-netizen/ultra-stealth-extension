@@ -1,8 +1,8 @@
-// Ultra-Stealth Engine v11.0: Quantum Apex Edition (Domain-Isolated Fingerprint & Font Shield)
+// Ultra-Stealth Engine v12.0: Ultimate Titan Edition (Layout Jitter, Gamepad, WebGPU & Sensor Shield)
 (function () {
   'use strict';
 
-  // Domain-isolated session seed (Different fingerprint per domain load!)
+  // Domain-isolated session seed
   const domainHash = Array.from(window.location.hostname || 'default')
     .reduce((acc, char) => (acc * 31 + char.charCodeAt(0)) % 1000000, 7);
   const sessionSeed = domainHash + Math.floor(Math.random() * 1000) + 1;
@@ -116,7 +116,47 @@
   } catch (e) {}
 
   // -------------------------------------------------------------
-  // 3. WEBGL & WEBGL2 BUFFER NOISE & PARAMETER SPOOFING
+  // 3. LAYOUT & CLIENTRECTS MICRO-JITTER (ELEMENT BOUNDING FINGERPRINTING)
+  // -------------------------------------------------------------
+  try {
+    const originalGetBoundingClientRect = Element.prototype.getBoundingClientRect;
+    Element.prototype.getBoundingClientRect = markNative(function () {
+      const rect = originalGetBoundingClientRect.apply(this, arguments);
+      const jitter = sessionSeed % 2 === 0 ? 0.00001 : -0.00001;
+      return new DOMRect(
+        rect.x + jitter,
+        rect.y + jitter,
+        rect.width + jitter,
+        rect.height + jitter
+      );
+    }, 'getBoundingClientRect');
+
+    const originalGetClientRects = Element.prototype.getClientRects;
+    Element.prototype.getClientRects = markNative(function () {
+      const rects = originalGetClientRects.apply(this, arguments);
+      const list = [];
+      const jitter = sessionSeed % 2 === 0 ? 0.00001 : -0.00001;
+      for (let i = 0; i < rects.length; i++) {
+        const r = rects[i];
+        list.push(new DOMRect(r.x + jitter, r.y + jitter, r.width + jitter, r.height + jitter));
+      }
+      return list;
+    }, 'getClientRects');
+  } catch (e) {}
+
+  // -------------------------------------------------------------
+  // 4. GAMEPAD API MASKING
+  // -------------------------------------------------------------
+  try {
+    if (navigator.getGamepads) {
+      navigator.getGamepads = markNative(function () {
+        return [];
+      }, 'getGamepads');
+    }
+  } catch (e) {}
+
+  // -------------------------------------------------------------
+  // 5. WEBGPU MASKING & WEBGL PARAMETER SPOOFING
   // -------------------------------------------------------------
   try {
     const webGLVendor = 'Google Inc. (NVIDIA)';
@@ -145,10 +185,25 @@
 
     if (window.WebGLRenderingContext) overrideWebGL(WebGLRenderingContext.prototype);
     if (window.WebGL2RenderingContext) overrideWebGL(WebGL2RenderingContext.prototype);
+
+    if (navigator.gpu && navigator.gpu.requestAdapter) {
+      const originalRequestAdapter = navigator.gpu.requestAdapter;
+      navigator.gpu.requestAdapter = markNative(function () {
+        return originalRequestAdapter.apply(this, arguments).then(adapter => {
+          if (!adapter) return null;
+          return new Proxy(adapter, {
+            get(target, prop) {
+              if (prop === 'name') return 'NVIDIA GeForce RTX 3060';
+              return target[prop];
+            }
+          });
+        });
+      }, 'requestAdapter');
+    }
   } catch (e) {}
 
   // -------------------------------------------------------------
-  // 4. AUDIOCONTEXT & SPEECH SYNTHESIS SPOOFING
+  // 6. AUDIOCONTEXT & SPEECH SYNTHESIS SPOOFING
   // -------------------------------------------------------------
   try {
     if (window.AudioBuffer) {
@@ -168,7 +223,7 @@
   } catch (e) {}
 
   // -------------------------------------------------------------
-  // 5. FONT ENUMERATION STANDARDIZATION SHIELD
+  // 7. FONT ENUMERATION STANDARDIZATION SHIELD
   // -------------------------------------------------------------
   try {
     if (document.fonts && document.fonts.check) {
@@ -182,7 +237,7 @@
   } catch (e) {}
 
   // -------------------------------------------------------------
-  // 6. PERFORMANCE TIMING JITTER (SIDE-CHANNEL PROTECTION)
+  // 8. PERFORMANCE TIMING JITTER (SIDE-CHANNEL PROTECTION)
   // -------------------------------------------------------------
   try {
     if (window.performance && window.performance.now) {
@@ -194,7 +249,7 @@
   } catch (e) {}
 
   // -------------------------------------------------------------
-  // 7. MEDIADEVICES & HARDWARE SPOOFING
+  // 9. MEDIADEVICES & HARDWARE SPOOFING
   // -------------------------------------------------------------
   try {
     if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
@@ -207,7 +262,7 @@
   } catch (e) {}
 
   // -------------------------------------------------------------
-  // 8. TIMEZONE & LOCALE SYNCHRONIZATION ENGINE (US / UTC)
+  // 10. TIMEZONE & LOCALE SYNCHRONIZATION ENGINE (US / UTC)
   // -------------------------------------------------------------
   try {
     const originalResolvedOptions = Intl.DateTimeFormat.prototype.resolvedOptions;
@@ -224,7 +279,7 @@
   } catch (e) {}
 
   // -------------------------------------------------------------
-  // 9. PRIVACY HEADERS & HARDWARE STANDARDIZATION
+  // 11. PRIVACY HEADERS & HARDWARE STANDARDIZATION
   // -------------------------------------------------------------
   try {
     const defineProp = (obj, prop, valueGetter) => {
@@ -270,5 +325,5 @@
     }
   } catch (e) {}
 
-  console.log('🌌 [Ultra-Stealth Engine v11.0 Quantum Apex] Domain-Isolated & Quantum Shielded');
+  console.log('⚡ [Ultra-Stealth Engine v12.0 Ultimate Titan] Full Spectrum Shield Active');
 })();

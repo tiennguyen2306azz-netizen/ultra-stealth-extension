@@ -10,14 +10,14 @@ document.addEventListener('DOMContentLoaded', () => {
   function updateUI(active) {
     if (active) {
       btnMasterConnect.classList.add('active');
-      powerLabel.textContent = 'ĐÃ KẾT NỐI: ĐỔI IP TOR & QUANTUM APEX v11.0';
-      powerSubtext.textContent = 'Đã Đổi IP Tor • Domain Isolation • Font Shield • Anti-Trace v11.0';
+      powerLabel.textContent = 'ĐÃ KẾT NỐI: ĐỔI IP TOR & TITAN APEX v12.0';
+      powerSubtext.textContent = 'Đã Đổi IP Tor • Layout Jitter • Gamepad • WebGPU • Anti-Trace v12.0';
       statusBadge.classList.add('active');
-      statusText.textContent = 'QUANTUM SHIELD';
+      statusText.textContent = 'TITAN SHIELD';
     } else {
       btnMasterConnect.classList.remove('active');
       powerLabel.textContent = 'NGẮT KẾT NỐI (NHẤN ĐỂ BẬT KẾT NỐI)';
-      powerSubtext.textContent = 'Nhấn để Bật Đổi IP Tor, Đổi DNS & Chống Truy Vết v11.0';
+      powerSubtext.textContent = 'Nhấn để Bật Đổi IP Tor, Đổi DNS & Chống Truy Vết v12.0';
       statusBadge.classList.remove('active');
       statusText.textContent = 'NGẮT KẾT NỐI';
     }
