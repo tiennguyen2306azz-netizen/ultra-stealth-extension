@@ -1,4 +1,4 @@
-// Ultra-Stealth Service Worker v8.0 - Extreme Anti-Detection & Tor Proxy Worker
+// Ultra-Stealth Service Worker v12.1 - Smart Network Fallback & Tor Proxy Worker
 
 const TOR_PROXY_CONFIG = {
   mode: 'fixed_servers',
@@ -8,7 +8,7 @@ const TOR_PROXY_CONFIG = {
       host: '127.0.0.1',
       port: 9150 // Tor Browser Default SOCKS5 Port
     },
-    bypassList: ['<local>']
+    bypassList: ['<local>', '127.0.0.1', 'localhost', '*.local']
   }
 };
 
@@ -64,14 +64,14 @@ function applySettings(settings) {
     }
   }
 
-  // 4. Tor SOCKS5 Proxy Integration (Auto-Fake IP in Chrome)
+  // 4. Tor SOCKS5 Proxy Integration (Auto-Fallback Protected)
   if (settings.proxyEnabled) {
     chrome.proxy.settings.set({ value: TOR_PROXY_CONFIG, scope: 'regular' }, () => {
-      console.log('[Ultra-Stealth v8.0] Tor SOCKS5 Proxy ACTIVE on port 9150 (IP FAKED)!');
+      console.log('[Ultra-Stealth v12.1] Tor SOCKS5 Proxy ACTIVE on port 9150');
     });
   } else {
     chrome.proxy.settings.clear({ scope: 'regular' }, () => {
-      console.log('[Ultra-Stealth v8.0] Proxy CLEARED (Direct Connection)');
+      console.log('[Ultra-Stealth v12.1] Direct Connection Active (Gigabit Mode)');
     });
   }
 
