@@ -10,14 +10,14 @@ document.addEventListener('DOMContentLoaded', () => {
   function updateUI(active) {
     if (active) {
       btnMasterConnect.classList.add('active');
-      powerLabel.textContent = 'ĐÃ KẾT NỐI: ĐỔI IP TOR & ẨN DANH MAX';
-      powerSubtext.textContent = 'Đã Đổi IP Qua Tor • Đổi DNS • Chống Truy Vết Cực Mạnh v8.0';
+      powerLabel.textContent = 'ĐÃ KẾT NỐI: ĐỔI IP TOR & ẨN DANH APEX v10.0';
+      powerSubtext.textContent = 'Đã Đổi IP Tor • Đổi DNS • Native Code Disguise • Anti-Trace v10.0';
       statusBadge.classList.add('active');
-      statusText.textContent = 'ĐÃ KẾT NỐI TOR';
+      statusText.textContent = 'APEX PROTECTED';
     } else {
       btnMasterConnect.classList.remove('active');
       powerLabel.textContent = 'NGẮT KẾT NỐI (NHẤN ĐỂ BẬT KẾT NỐI)';
-      powerSubtext.textContent = 'Nhấn để Bật Đổi IP Tor, Đổi DNS & Chống Truy Vết v8.0';
+      powerSubtext.textContent = 'Nhấn để Bật Đổi IP Tor, Đổi DNS & Chống Truy Vết v10.0';
       statusBadge.classList.remove('active');
       statusText.textContent = 'NGẮT KẾT NỐI';
     }
