@@ -2,6 +2,7 @@
 
 ![Version](https://img.shields.io/badge/version-9.0.0-blue.svg)
 ![Manifest](https://img.shields.io/badge/manifest-v3-green.svg)
+![Author](https://img.shields.io/badge/author-tiennguyen2306azz--netizen-brightgreen.svg)
 ![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)
 
 **Ultra-Stealth Privacy Shield** là tiện ích mở rộng Chrome (Manifest V3) bảo vệ ẩn danh toàn diện, chống theo dõi vết phần cứng (Browser Fingerprinting), rò rỉ IP (WebRTC STUN/TURN) và tự động tích hợp định tuyến Tor SOCKS5 Proxy.
@@ -25,7 +26,7 @@
 
 1. Tải repository này về máy hoặc clone qua Git:
    ```bash
-   git clone https://github.com/USERNAME/ultra-stealth-extension.git
+   git clone https://github.com/tiennguyen2306azz-netizen/ultra-stealth-extension.git
    ```
 2. Mở trình duyệt Chrome / Edge ➔ Truy cập `chrome://extensions` (hoặc `edge://extensions`).
 3. Bật công tắc **Developer mode** ở góc trên bên phải.
@@ -34,6 +35,14 @@
 
 ---
 
+## 🚀 Push Lên GitHub
+
+```bash
+git push -u origin main
+```
+
+---
+
 ## 📄 Giấy Phép (License)
 
-Phát triển dưới giấy phép [MIT License](LICENSE).
+Phát triển bởi **tiennguyen2306azz-netizen** dưới giấy phép [MIT License](LICENSE).
