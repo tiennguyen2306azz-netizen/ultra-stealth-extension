@@ -1,22 +1,24 @@
-# Ultra-Stealth Privacy Shield v11.0 Quantum Apex Edition
+# Ultra-Stealth Privacy Shield v12.2 Ultimate Titan Edition
 
-![Version](https://img.shields.io/badge/version-11.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-12.2.0-blue.svg)
 ![Manifest](https://img.shields.io/badge/manifest-v3-green.svg)
-![Author](https://img.shields.io/badge/author-TienNguyen%20Hacker-brightgreen.svg)
+![Author](https://img.shields.io/badge/author-TienNguyen-brightgreen.svg)
 ![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)
 
 **Ultra-Stealth Privacy Shield** là tiện ích mở rộng Chrome (Manifest V3) bảo vệ ẩn danh toàn diện, chống theo dõi vết phần cứng (Browser Fingerprinting), rò rỉ IP (WebRTC STUN/TURN) và tự động tích hợp định tuyến Tor SOCKS5 Proxy.
 
 ---
 
-## 🌟 Tính Năng Nổi Bật v11.0 Quantum Apex
+## 🌟 Tính Năng Nổi Bật v12.2 Ultimate Titan
 
-- 🌐 **Auto Tor SOCKS5 Proxy Integration (`127.0.0.1:9150`)**: Tự động ép toàn bộ luồng kết nối Chrome đổi sang địa chỉ IP Tor Quốc Tế.
+- 🌐 **Auto Tor SOCKS5 Proxy & Smart PAC Fallback (`127.0.0.1:9150`)**: Tự động ép toàn bộ luồng kết nối Chrome đổi sang địa chỉ IP Tor Quốc Tế, tự động chuyển DIRECT nếu không mở Tor để 0% gián đoạn mạng.
 - 🔒 **WebRTC STUN/TURN Hard Block**: Triệt tiêu rủi ro đào IP gốc qua WebRTC.
 - 🛡️ **Native Function Masking (`[native code]`)**: Ngụy trang mã nguồn JavaScript đã can thiệp, bypass 100% các công cụ quét Anti-Bot (CreepJS, FingerprintJS v4).
 - 🌐 **Domain-Isolated Fingerprinting**: Mỗi tên miền website nhận một chữ ký vân tay hoàn toàn riêng biệt, chặn đứng Cross-Site Tracking.
+- 📏 **Layout & ClientRects Micro-Jitter**: Nhiễu kích thước khung hình `getBoundingClientRect` chặn đứng Layout Fingerprinting.
+- 🎮 **Gamepad API Masking**: Vô hiệu hóa truy vấn thiết bị tay cầm chơi game.
+- 🎨 **WebGPU Adapter & WebGL2 Buffer Noise Engine**: Làm nhiễu hàm `readPixels` và giả lập Card màn hình GPU thành `NVIDIA GeForce RTX 3060`.
 - 🔤 **Font Enumeration Shield**: Chặn đứng các kỹ thuật quét danh sách Font chữ cài trong máy Windows.
-- 🎨 **WebGL & WebGL2 Buffer Noise Engine**: Làm nhiễu hàm `readPixels` và giả lập Card màn hình GPU thành `NVIDIA GeForce RTX 3060`.
 - 🎨 **Canvas Subpixel Jitter & OffscreenCanvas Shield**: Chèn nhiễu subpixel vào Canvas và OffscreenCanvas Worker Threads.
 - 🔊 **AudioContext & Speech Synthesis Noise**: Làm nhiễu mẫu tần số âm thanh và giả lập vô hiệu hóa danh sách giọng nói `speechSynthesis`.
 - ⏱️ **Performance Timing Jitter**: Bơm nhiễu micro-float vào `performance.now()` chặn đứng Side-Channel Attacks.
@@ -41,4 +43,4 @@
 
 ## 📄 Giấy Phép (License)
 
-Phát triển bởi **TienNguyen Hacker** dưới giấy phép [MIT License](LICENSE).
+Phát triển bởi **TienNguyen** dưới giấy phép [MIT License](LICENSE).
