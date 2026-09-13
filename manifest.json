@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Ultra-Stealth Privacy Shield",
-  "version": "12.0.0",
-  "description": "Bảo vệ ẩn danh tối thượng v12.0 Ultimate Titan: Tự động đổi IP Tor SOCKS5, Chống WebRTC STUN Leak, Domain Isolation, Layout Jitter, Gamepad API Masking & WebGPU Spoofing.",
+  "version": "13.0.0",
+  "description": "Bảo vệ ẩn danh & Anti-Bot v13.0: Tự động đổi IP Tor SOCKS5, Xóa triệt để dấu vết webdriver/cdc, Giả lập Permissions & Plugins chuẩn người dùng thật.",
   "permissions": [
     "privacy",
     "proxy",

@@ -1,4 +1,4 @@
-// Ultra-Stealth Engine v12.0: Ultimate Titan Edition (Layout Jitter, Gamepad, WebGPU & Sensor Shield)
+// Ultra-Stealth Engine v13.0: Anti-Bot Defense & Stealth Bypass Architecture
 (function () {
   'use strict';
 
@@ -11,9 +11,10 @@
     return (Math.random() - 0.5) * 0.000005;
   }
 
-  // Native function masking helper
+  // Robust Native Function Masking Helper
   const nativeToString = Function.prototype.toString;
   const overriddenFns = new Set();
+  
   Function.prototype.toString = function () {
     if (overriddenFns.has(this)) {
       return `function ${this.name || ''}() { [native code] }`;
@@ -25,15 +26,84 @@
   function markNative(fn, name) {
     if (name) {
       try {
-        Object.defineProperty(fn, 'name', { value: name, configurable: true });
+        Object.defineProperty(fn, 'name', { value: name, configurable: true, writable: false });
       } catch (e) {}
     }
+    try {
+      Object.defineProperty(fn, 'toString', {
+        value: markNative(function toString() {
+          return `function ${name || fn.name || ''}() { [native code] }`;
+        }, 'toString'),
+        configurable: true,
+        writable: true
+      });
+    } catch (e) {}
     overriddenFns.add(fn);
     return fn;
   }
 
   // -------------------------------------------------------------
-  // 1. WEBRTC HARD STUN & ICE CANDIDATE BLOCK
+  // 1. AUTOMATION DETECTION ELIMINATION (cdc_ & webdriver)
+  // -------------------------------------------------------------
+  try {
+    const defineProp = (obj, prop, valueGetter) => {
+      try {
+        Object.defineProperty(obj, prop, {
+          get: markNative(valueGetter, prop),
+          configurable: true,
+          enumerable: true
+        });
+      } catch (e) {}
+    };
+
+    defineProp(navigator, 'webdriver', () => undefined);
+    
+    // Remove automation window properties
+    delete window.cdc_adoQbx101705_Array;
+    delete window.cdc_adoQbx101705_Promise;
+    delete window.cdc_adoQbx101705_Symbol;
+    
+    // Disguise chrome runtime / automation flags
+    if (!window.chrome) {
+      window.chrome = {};
+    }
+    if (!window.chrome.runtime) {
+      window.chrome.runtime = {
+        connect: markNative(() => {}, 'connect'),
+        sendMessage: markNative(() => {}, 'sendMessage')
+      };
+    }
+  } catch (e) {}
+
+  // -------------------------------------------------------------
+  // 2. HUMANIZED PERMISSION & CHROME PLUGIN MASKING
+  // -------------------------------------------------------------
+  try {
+    if (navigator.permissions && navigator.permissions.query) {
+      const originalQuery = navigator.permissions.query;
+      navigator.permissions.query = markNative(function (parameters) {
+        if (parameters && parameters.name === 'notifications') {
+          return Promise.resolve({ state: Notification.permission || 'default', onchange: null });
+        }
+        return originalQuery.apply(this, arguments);
+      }, 'query');
+    }
+
+    // Spoof realistic Plugins array
+    const fakePlugins = [
+      { name: 'PDF Viewer', filename: 'internal-pdf-viewer', description: 'Portable Document Format' },
+      { name: 'Chrome PDF Viewer', filename: 'internal-pdf-viewer', description: 'Portable Document Format' },
+      { name: 'Chromium PDF Viewer', filename: 'internal-pdf-viewer', description: 'Portable Document Format' }
+    ];
+    Object.defineProperty(navigator, 'plugins', {
+      get: markNative(() => fakePlugins, 'plugins'),
+      configurable: true,
+      enumerable: true
+    });
+  } catch (e) {}
+
+  // -------------------------------------------------------------
+  // 3. WEBRTC STUN BLOCKING
   // -------------------------------------------------------------
   try {
     if (window.RTCPeerConnection) {
@@ -58,7 +128,7 @@
   } catch (e) {}
 
   // -------------------------------------------------------------
-  // 2. DOMAIN-ISOLATED CANVAS & FONT ENUMERATION SHIELD
+  // 4. DOMAIN-ISOLATED CANVAS & FONT ENUMERATION SHIELD
   // -------------------------------------------------------------
   try {
     const originalGetImageData = CanvasRenderingContext2D.prototype.getImageData;
@@ -116,7 +186,7 @@
   } catch (e) {}
 
   // -------------------------------------------------------------
-  // 3. LAYOUT & CLIENTRECTS MICRO-JITTER (ELEMENT BOUNDING FINGERPRINTING)
+  // 5. LAYOUT CLIENTRECTS MICRO-JITTER
   // -------------------------------------------------------------
   try {
     const originalGetBoundingClientRect = Element.prototype.getBoundingClientRect;
@@ -145,7 +215,7 @@
   } catch (e) {}
 
   // -------------------------------------------------------------
-  // 4. GAMEPAD API MASKING
+  // 6. GAMEPAD & WEBGPU / WEBGL SPOOFING
   // -------------------------------------------------------------
   try {
     if (navigator.getGamepads) {
@@ -153,12 +223,7 @@
         return [];
       }, 'getGamepads');
     }
-  } catch (e) {}
 
-  // -------------------------------------------------------------
-  // 5. WEBGPU MASKING & WEBGL PARAMETER SPOOFING
-  // -------------------------------------------------------------
-  try {
     const webGLVendor = 'Google Inc. (NVIDIA)';
     const webGLRenderer = 'ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Direct3D11 vs_5_0 ps_5_0, D3D11)';
 
@@ -203,66 +268,7 @@
   } catch (e) {}
 
   // -------------------------------------------------------------
-  // 6. AUDIOCONTEXT & SPEECH SYNTHESIS SPOOFING
-  // -------------------------------------------------------------
-  try {
-    if (window.AudioBuffer) {
-      const originalGetChannelData = AudioBuffer.prototype.getChannelData;
-      AudioBuffer.prototype.getChannelData = markNative(function () {
-        const channelData = originalGetChannelData.apply(this, arguments);
-        for (let i = 0; i < channelData.length; i += 50) {
-          channelData[i] += getRandomFloatNoise();
-        }
-        return channelData;
-      }, 'getChannelData');
-    }
-
-    if (window.speechSynthesis) {
-      window.speechSynthesis.getVoices = markNative(() => [], 'getVoices');
-    }
-  } catch (e) {}
-
-  // -------------------------------------------------------------
-  // 7. FONT ENUMERATION STANDARDIZATION SHIELD
-  // -------------------------------------------------------------
-  try {
-    if (document.fonts && document.fonts.check) {
-      const originalCheck = document.fonts.check;
-      document.fonts.check = markNative(function (font, text) {
-        const allowedFonts = ['Arial', 'Calibri', 'Courier New', 'Georgia', 'Helvetica', 'Impact', 'Segoe UI', 'Times New Roman', 'Verdana'];
-        const isAllowed = allowedFonts.some(f => font.includes(f));
-        return isAllowed ? originalCheck.apply(this, arguments) : false;
-      }, 'check');
-    }
-  } catch (e) {}
-
-  // -------------------------------------------------------------
-  // 8. PERFORMANCE TIMING JITTER (SIDE-CHANNEL PROTECTION)
-  // -------------------------------------------------------------
-  try {
-    if (window.performance && window.performance.now) {
-      const originalNow = window.performance.now;
-      window.performance.now = markNative(function () {
-        return originalNow.apply(this, arguments) + getRandomFloatNoise();
-      }, 'now');
-    }
-  } catch (e) {}
-
-  // -------------------------------------------------------------
-  // 9. MEDIADEVICES & HARDWARE SPOOFING
-  // -------------------------------------------------------------
-  try {
-    if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
-      navigator.mediaDevices.enumerateDevices = markNative(() => Promise.resolve([
-        { deviceId: "default", kind: "audioinput", label: "Default Microphone", groupId: "group_audio" },
-        { deviceId: "default", kind: "videoinput", label: "Integrated HD Camera", groupId: "group_video" },
-        { deviceId: "default", kind: "audiooutput", label: "Default Speakers", groupId: "group_output" }
-      ]), 'enumerateDevices');
-    }
-  } catch (e) {}
-
-  // -------------------------------------------------------------
-  // 10. TIMEZONE & LOCALE SYNCHRONIZATION ENGINE (US / UTC)
+  // 7. TIMEZONE & LOCALE SYNCHRONIZATION ENGINE (US / UTC)
   // -------------------------------------------------------------
   try {
     const originalResolvedOptions = Intl.DateTimeFormat.prototype.resolvedOptions;
@@ -279,7 +285,7 @@
   } catch (e) {}
 
   // -------------------------------------------------------------
-  // 11. PRIVACY HEADERS & HARDWARE STANDARDIZATION
+  // 8. PRIVACY HEADERS & HARDWARE STANDARDIZATION
   // -------------------------------------------------------------
   try {
     const defineProp = (obj, prop, valueGetter) => {
@@ -307,23 +313,7 @@
     defineProp(screen, 'availHeight', () => 1040);
     defineProp(screen, 'colorDepth', () => 24);
     defineProp(screen, 'pixelDepth', () => 24);
-
-    defineProp(navigator, 'connection', () => ({
-      downlink: 10,
-      effectiveType: '4g',
-      rtt: 50,
-      saveData: false
-    }));
-
-    if (navigator.getBattery) {
-      navigator.getBattery = markNative(() => Promise.resolve({
-        charging: true,
-        chargingTime: 0,
-        dischargingTime: Infinity,
-        level: 1.0
-      }), 'getBattery');
-    }
   } catch (e) {}
 
-  console.log('⚡ [Ultra-Stealth Engine v12.0 Ultimate Titan] Full Spectrum Shield Active');
+  console.log('🛡️ [Ultra-Stealth Engine v13.0 Anti-Bot Defense] Operational & Fully Humanized');
 })();
