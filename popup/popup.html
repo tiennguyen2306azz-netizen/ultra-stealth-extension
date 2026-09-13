@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ultra-Stealth Shield v12.0 Titan</title>
+  <title>Ultra-Stealth Shield v13.5</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
@@ -11,24 +11,67 @@
     <div class="header">
       <div class="logo-title">
         <span class="shield-icon">🛡️</span>
-        <h2>Ultra-Stealth v12.0 Titan</h2>
+        <h2>Ultra-Stealth v13.5</h2>
       </div>
       <div class="status-badge active" id="statusBadge">
-        <span class="status-dot"></span> <span id="statusText">TITAN TITANIC SHIELD</span>
+        <span class="status-dot"></span> <span id="statusText">APEX SHIELD</span>
       </div>
     </div>
 
-    <!-- ONE SINGLE CONNECT BUTTON -->
+    <!-- MASTER CONNECT BUTTON -->
     <div class="power-container">
       <button class="btn-power active" id="btnMasterConnect">
         <span class="power-icon">👑</span>
-        <span class="power-label" id="powerLabel">ĐÃ KẾT NỐI: ĐỔI IP TOR & TITAN APEX v12.0</span>
-        <span class="power-subtext" id="powerSubtext">Đã Đổi IP Tor • Layout Jitter • Gamepad • WebGPU • Anti-Trace v12.0</span>
+        <span class="power-label" id="powerLabel">ĐÃ KẾT NỐI: ĐỔI IP & ẨN DANH MAX</span>
+        <span class="power-subtext" id="powerSubtext">Đã Đổi IP • Anti-Bot Bypass • Layout Jitter • Anti-Trace v13.5</span>
       </button>
     </div>
 
+    <!-- PROXY CONFIGURATION SECTION -->
+    <div class="proxy-section">
+      <div class="proxy-header">
+        <span>🌐 Cấu Hình Proxy Đổi IP</span>
+        <button class="btn-toggle-proxy-box" id="btnToggleProxyBox">⚙️ Cài Đặt</button>
+      </div>
+
+      <div class="proxy-box hidden" id="proxyBox">
+        <div class="proxy-mode-selector">
+          <label class="radio-label">
+            <input type="radio" name="proxyMode" value="tor" checked id="radioTor">
+            <span>🌰 Tor Proxy (SOCKS5 9150/9050)</span>
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="proxyMode" value="custom" id="radioCustom">
+            <span>🌐 Proxy Tùy Chỉnh (Custom Proxy)</span>
+          </label>
+        </div>
+
+        <div class="custom-proxy-inputs hidden" id="customProxyInputs">
+          <div class="input-row">
+            <div class="input-group flex-1">
+              <label for="customProxyType">Loại</label>
+              <select id="customProxyType">
+                <option value="socks5">SOCKS5</option>
+                <option value="http">HTTP</option>
+                <option value="https">HTTPS</option>
+              </select>
+            </div>
+            <div class="input-group flex-2">
+              <label for="customProxyHost">Host / IP Proxy</label>
+              <input type="text" id="customProxyHost" placeholder="127.0.0.1 hoặc domain">
+            </div>
+            <div class="input-group flex-1">
+              <label for="customProxyPort">Port</label>
+              <input type="number" id="customProxyPort" placeholder="1080">
+            </div>
+          </div>
+          <button class="btn-save" id="btnSaveCustomProxy">Áp Dụng Proxy Mới</button>
+        </div>
+      </div>
+    </div>
+
     <div class="footer">
-      <span>Ultra-Stealth Shield v12.0 • Tối Thượng Bảo Vệ & Chống Truy Vết Thế Giới</span>
+      <span>Ultra-Stealth Shield v13.5 • Đổi IP & Vượt Xác Thực Anti-Bot</span>
     </div>
   </div>
 

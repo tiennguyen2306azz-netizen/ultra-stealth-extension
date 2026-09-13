@@ -1,32 +1,29 @@
-// Ultra-Stealth Service Worker v12.2 - Smart Zero-Downtime Proxy Worker
+// Ultra-Stealth Service Worker v13.5 - Advanced Proxy Routing & Anti-Detect Engine
 
-const TOR_PAC_CONFIG = {
-  mode: 'pac_script',
-  pacScript: {
-    data: `
-      function FindProxyForURL(url, host) {
-        if (isPlainHostName(host) || shExpMatch(host, '127.0.0.1') || shExpMatch(host, 'localhost') || shExpMatch(host, '*.local')) {
-          return 'DIRECT';
-        }
-        return 'SOCKS5 127.0.0.1:9150; SOCKS5 127.0.0.1:9050; DIRECT';
-      }
-    `
-  }
-};
-
+// Default SOCKS5 & Custom Proxy Settings Storage Key
 const DEFAULT_SETTINGS = {
   webrtcProtect: true,
   dnsPrivacyProtect: true,
   fingerprintProtect: true,
   timezoneSpoof: true,
   proxyEnabled: true,
+  proxyMode: 'tor', // 'tor', 'custom', 'direct'
+  customProxyType: 'socks5', // 'socks5', 'http', 'https'
+  customProxyHost: '127.0.0.1',
+  customProxyPort: 1080,
   userAgentSpoof: true
 };
 
 // Initialize settings on install
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.local.set({ stealthSettings: DEFAULT_SETTINGS }, () => {
-    applySettings(DEFAULT_SETTINGS);
+  chrome.storage.local.get(['stealthSettings'], (res) => {
+    if (!res.stealthSettings) {
+      chrome.storage.local.set({ stealthSettings: DEFAULT_SETTINGS }, () => {
+        applySettings(DEFAULT_SETTINGS);
+      });
+    } else {
+      applySettings(res.stealthSettings);
+    }
   });
 });
 
@@ -66,14 +63,52 @@ function applySettings(settings) {
     }
   }
 
-  // 4. Smart Zero-Downtime Proxy (Auto-Fallback to DIRECT if Tor is offline)
+  // 4. Advanced Proxy Configuration
   if (settings.proxyEnabled) {
-    chrome.proxy.settings.set({ value: TOR_PAC_CONFIG, scope: 'regular' }, () => {
-      console.log('[Ultra-Stealth v12.2] Smart Zero-Downtime Proxy ACTIVE (SOCKS5 9150 -> 9050 -> DIRECT)');
+    let proxyConfig;
+    const mode = settings.proxyMode || 'tor';
+
+    if (mode === 'custom' && settings.customProxyHost) {
+      const scheme = settings.customProxyType || 'socks5';
+      const host = settings.customProxyHost.trim();
+      const port = parseInt(settings.customProxyPort, 10) || 1080;
+
+      proxyConfig = {
+        mode: 'fixed_servers',
+        rules: {
+          singleProxy: {
+            scheme: scheme,
+            host: host,
+            port: port
+          },
+          bypassList: ['<local>', '127.0.0.1', 'localhost']
+        }
+      };
+      console.log(`[Ultra-Stealth v13.5] Custom Proxy ACTIVE: ${scheme}://${host}:${port}`);
+    } else {
+      // Default Tor Smart PAC Proxy (9150 -> 9050 -> DIRECT fallback)
+      proxyConfig = {
+        mode: 'pac_script',
+        pacScript: {
+          data: `
+            function FindProxyForURL(url, host) {
+              if (isPlainHostName(host) || shExpMatch(host, '127.0.0.1') || shExpMatch(host, 'localhost') || shExpMatch(host, '*.local')) {
+                return 'DIRECT';
+              }
+              return 'SOCKS5 127.0.0.1:9150; SOCKS5 127.0.0.1:9050; DIRECT';
+            }
+          `
+        }
+      };
+      console.log('[Ultra-Stealth v13.5] Smart Tor Proxy ACTIVE (Port 9150/9050)');
+    }
+
+    chrome.proxy.settings.set({ value: proxyConfig, scope: 'regular' }, () => {
+      console.log('[Ultra-Stealth v13.5] Proxy Rules Applied.');
     });
   } else {
     chrome.proxy.settings.clear({ scope: 'regular' }, () => {
-      console.log('[Ultra-Stealth v12.2] Direct Connection Active');
+      console.log('[Ultra-Stealth v13.5] Proxy Cleared (Direct Connection)');
     });
   }
 
